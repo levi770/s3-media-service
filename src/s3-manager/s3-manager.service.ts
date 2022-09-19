@@ -1,16 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectAwsService } from 'nest-aws-sdk';
 import { S3 } from 'aws-sdk';
-import { NewObjectParamsDto } from '../dto/newObjectParams.dto';
-import { InjectModel } from '@nestjs/sequelize';
-import { File } from '../models/file.model';
+import { NewObjectParamsDto } from '../common/dto/newObjectParams.dto';
 import { ConfigService } from '@nestjs/config';
+import { DbManagerService } from '../db-manager/db-manager.service';
 
 @Injectable()
 export class S3ManagerService {
   constructor(
     @InjectAwsService(S3) private readonly s3: S3,
-    @InjectModel(File) private fileRepository: typeof File,
+    private readonly dbManagerService: DbManagerService,
     private readonly configService: ConfigService,
   ) {}
 
@@ -20,10 +19,12 @@ export class S3ManagerService {
   }
 
   async generatePutObjectUrl(params: NewObjectParamsDto) {
-    const file = await this.fileRepository.create({ params });
+    const file = await this.dbManagerService.createFile(params);
 
     return await this.s3.getSignedUrlPromise('putObject', {
       Bucket: await this.configService.get('S3_BUCKET_NAME'),
+      ContentType: params.fileType,
+      //ACL: 'public-read',
       Key: file.id,
       Expires: 600,
     });
