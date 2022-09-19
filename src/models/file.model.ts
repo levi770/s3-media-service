@@ -14,10 +14,19 @@ export class File extends Model {
     defaultValue: DataType.UUIDV4,
     primaryKey: true,
   })
-  id: number;
+  id: string;
 
   @Column({ type: DataType.STRING })
   name: string;
+
+  @Column({ type: DataType.STRING })
+  encoding: string;
+
+  @Column({ type: DataType.STRING })
+  mimetype: string;
+
+  @Column({ type: DataType.INTEGER })
+  size: number;
 
   @Column({
     type: DataType.ENUM('initial', 'pending', 'uploaded', 'failed', 'deleted'),
