@@ -1,4 +1,11 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import {
+  Column,
+  DataType,
+  HasMany,
+  Model,
+  Table,
+  ForeignKey,
+} from 'sequelize-typescript';
 
 @Table({ tableName: 'files' })
 export class File extends Model {
@@ -8,6 +15,9 @@ export class File extends Model {
     primaryKey: true,
   })
   id: number;
+
+  @Column({ type: DataType.STRING })
+  name: string;
 
   @Column({
     type: DataType.ENUM('initial', 'pending', 'uploaded', 'failed', 'deleted'),
@@ -23,4 +33,10 @@ export class File extends Model {
 
   @Column({ type: DataType.JSON })
   params: object;
+
+  @HasMany(() => File, { onDelete: 'CASCADE' })
+  processed_files: File[];
+
+  @ForeignKey(() => File)
+  fileId: string;
 }
