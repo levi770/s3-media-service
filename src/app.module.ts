@@ -5,11 +5,11 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AwsSdkModule } from 'nest-aws-sdk';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { File } from './models/file.model';
+import { File } from './db-manager/models/file.model';
 import { S3ManagerModule } from './s3-manager/s3-manager.module';
 import { SqsConsumerModule } from './sqs-consumer/sqs-consumer.module';
 import * as Joi from '@hapi/joi';
+import { DbManagerModule } from './db-manager/db-manager.module';
 
 @Module({
   imports: [
@@ -33,12 +33,12 @@ import * as Joi from '@hapi/joi';
     }),
     BullModule.forRootAsync({
       imports: [ConfigModule],
+      inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
         url: `redis://${await configService.get(
           'REDIS_HOST',
         )}:${await configService.get('REDIS_PORT')}`,
       }),
-      inject: [ConfigService],
     }),
     SequelizeModule.forRootAsync({
       imports: [ConfigModule],
@@ -91,8 +91,8 @@ import * as Joi from '@hapi/joi';
     }),
     S3ManagerModule,
     SqsConsumerModule,
+    DbManagerModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}
