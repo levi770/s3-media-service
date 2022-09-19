@@ -1,11 +1,14 @@
 import { SqsModule, SqsQueueType } from '@nestjs-packages/sqs';
 import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
+import { SequelizeModule } from '@nestjs/sequelize';
 import { join } from 'path';
 import { SqsConsumerService } from './sqs-consumer.service';
+import { File } from '../models/file.model';
 
 @Module({
   imports: [
+    SequelizeModule.forFeature([File]),
     BullModule.registerQueue({
       name: 'file',
       processors: [
