@@ -1,5 +1,6 @@
 export class NewObjectParamsDto {
   optimize?: boolean;
   convert?: boolean;
-  format?: string;
+  size?: string;
+  quality?: string;
 }
