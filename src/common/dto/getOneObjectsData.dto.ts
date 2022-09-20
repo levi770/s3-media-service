@@ -1,4 +1,5 @@
 export class GetOneObjectDataDto {
-  key: string;
+  id?: string;
+  key?: string;
   include_child?: boolean;
 }
