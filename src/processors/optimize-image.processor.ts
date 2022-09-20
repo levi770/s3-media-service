@@ -27,35 +27,43 @@ const uploadParams = {
 };
 
 async function imageProcessor(job: Job, doneCallback: DoneCallback) {
-  const fileData: File = job.data;
-  downloadParams.Key = fileData.id;
-  const objParams: NewObjectParamsDto = job.data.params;
+  try {
+    const objData: File = job.data;
+    const objParams: NewObjectParamsDto = job.data.params;
 
-  const file = await s3.getObject(downloadParams).promise();
+    downloadParams.Key = objData.key;
 
-  await fsAsync.writeFile(
-    join(process.cwd(), `/tmp/${fileData.id}.jpg`),
-    Buffer.from(file.Body.toString()),
-  );
+    const file = s3.getObject(downloadParams).createReadStream();
+    const filePath = join(process.cwd(), `/tmp/${objData.key}`);
+    await fsAsync.writeFile(filePath, file);
 
-  const converted = await sharp(Buffer.from(file.Body.toString()))
-    .webp({ quality: +objParams.quality || 100 })
-    .toBuffer();
+    const processedFile = await sharp(filePath)
+      .webp({ quality: +objParams.quality || 100 })
+      .toBuffer();
 
-  await fsAsync.writeFile(
-    join(process.cwd(), `/tmp/converted-${fileData.id}.webp`),
-    converted,
-  );
+    const fileName = objParams.originalname.split('.')[0];
 
-  const newObject = await File.create({ status: 'pending', type: 'optimised' });
+    await fsAsync.writeFile(
+      join(process.cwd(), `/tmp/converted-${objData.id}.${fileName}.webp`),
+      processedFile,
+    );
 
-  uploadParams.Key = newObject.id;
-  uploadParams.Body = converted;
+    const newObject = await File.create({
+      status: 'initial',
+      type: 'optimized',
+      fileId: objData.id,
+    });
 
-  s3.upload(uploadParams, (err, data) => {
-    if (err) doneCallback(err, null);
-    else doneCallback(null, data);
-  });
+    uploadParams.Key = `${newObject.id}.converted.${fileName}.webp`;
+    uploadParams.Body = processedFile;
+
+    s3.upload(uploadParams, (error: Error, data: any) => {
+      if (error) doneCallback(error, null);
+      else doneCallback(null, data);
+    });
+  } catch (error) {
+    doneCallback(error, null);
+  }
 }
 
 export default imageProcessor;
