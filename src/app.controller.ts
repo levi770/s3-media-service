@@ -28,7 +28,7 @@ export class AppController {
   async getAllObjectsDataByKeyMessage(
     params: GetAllObjectsDataDto,
   ): Promise<allObjects> {
-    return await this.dbManagerService.getAllObjectsDataByKey(params);
+    return await this.dbManagerService.getAllObjectsData(params);
   }
 
   @MessagePattern({ cmd: 'getOneObjectDataByKey' })

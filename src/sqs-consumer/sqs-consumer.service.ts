@@ -22,8 +22,8 @@ export class SqsConsumerService {
   @SqsMessageHandler(/** batch: */ false)
   public async handleMessage(message: SQS.Message) {
     const msgBody: any = JSON.parse(message.Body);
-    const objKey = msgBody.Records[0].s3.object.key;
-    const obj = await this.dbManagerService.findByPk(objKey);
+    const key = msgBody.Records[0].s3.object.key;
+    const obj = await this.dbManagerService.findByKey(key);
     const objParams = obj.params as NewObjectParamsDto;
 
     obj.status = 'uploaded';
@@ -31,9 +31,6 @@ export class SqsConsumerService {
 
     if (obj.type === 'original' && objParams.optimize) {
       await this.fileQueue.add('optimize-image', obj);
-    } else if (obj.type != 'original') {
-      obj.status = 'uploaded';
-      obj.save();
     }
   }
 
