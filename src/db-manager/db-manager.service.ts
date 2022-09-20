@@ -17,7 +17,11 @@ export class DbManagerService {
     return await this.fileRepository.findByPk(pk);
   }
 
-  async getAllObjectsDataByKey(params?: GetAllObjectsDataDto) {
+  async findByKey(key: string) {
+    return await this.fileRepository.findOne({ where: { key } });
+  }
+
+  async getAllObjectsData(params?: GetAllObjectsDataDto) {
     return await this.fileRepository.findAndCountAll({
       include: [{ model: File }],
       offset:
@@ -26,6 +30,13 @@ export class DbManagerService {
           : 0 + (+params.page - 1) * +params.limit,
       limit: !params || !params.limit ? null : params.limit,
       order: [[params.order_by, params.order]],
+    });
+  }
+
+  async getOneObjectDataById(params: GetOneObjectDataDto) {
+    return await this.fileRepository.findOne({
+      where: { id: params.key },
+      include: [{ model: File }],
     });
   }
 
