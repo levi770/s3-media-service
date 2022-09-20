@@ -1,5 +1,5 @@
 import { sequelize as sequelizeInstance } from './worker-db-instance';
-import { Model, DataTypes, HasManyAddAssociationsMixin } from 'sequelize';
+import { Model, DataTypes } from 'sequelize';
 
 const config = {
   tableName: 'files',
@@ -8,15 +8,12 @@ const config = {
 
 class File extends Model {
   id!: string;
-  name: string;
-  encoding: string;
-  mimetype: string;
-  size: number;
+  key: string;
   status: string;
   type: string;
   params: object;
   processed_files: File[];
-  addFile: HasManyAddAssociationsMixin<File, File['id']>;
+  fileId: string;
 }
 
 File.init(
@@ -25,6 +22,9 @@ File.init(
       type: DataTypes.UUIDV4,
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
+    },
+    key: {
+      type: DataTypes.STRING,
     },
     status: {
       type: DataTypes.STRING,
@@ -35,14 +35,19 @@ File.init(
     params: {
       type: DataTypes.JSON,
     },
+    fileId: {
+      type: DataTypes.STRING,
+    },
   },
   config,
 );
 
 File.hasMany(File, {
-  sourceKey: 'id',
-  foreignKey: 'fileId',
   as: 'processed_files',
+});
+
+File.belongsTo(File, {
+  foreignKey: 'fileId',
 });
 
 export default File;
