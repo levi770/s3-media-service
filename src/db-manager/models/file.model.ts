@@ -17,16 +17,7 @@ export class File extends Model {
   id: string;
 
   @Column({ type: DataType.STRING })
-  name: string;
-
-  @Column({ type: DataType.STRING })
-  encoding: string;
-
-  @Column({ type: DataType.STRING })
-  mimetype: string;
-
-  @Column({ type: DataType.INTEGER })
-  size: number;
+  key: string;
 
   @Column({
     type: DataType.ENUM('initial', 'pending', 'uploaded', 'failed', 'deleted'),
