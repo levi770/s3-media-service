@@ -20,12 +20,14 @@ export class S3ManagerService {
 
   async generatePutObjectUrl(params: NewObjectParamsDto) {
     const file = await this.dbManagerService.createFile(params);
+    file.key = `${file.id}.original.${params.originalname}`;
+    file.save();
 
     return await this.s3.getSignedUrlPromise('putObject', {
       Bucket: await this.configService.get('S3_BUCKET_NAME'),
       ContentType: params.fileType,
       //ACL: 'public-read',
-      Key: file.id,
+      Key: file.key,
       Expires: 600,
     });
   }
