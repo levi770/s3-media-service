@@ -5,7 +5,7 @@ import { GetOneObjectDataDto } from './common/dto/getOneObjectsData.dto';
 import { NewObjectParamsDto } from './common/dto/newObjectParams.dto';
 import { DbManagerService } from './db-manager/db-manager.service';
 import { S3ManagerService } from './s3-manager/s3-manager.service';
-import { File } from './db-manager/models/file.model';
+import { File } from './common/models/file.model';
 
 type allObjects = {
   rows: File[];

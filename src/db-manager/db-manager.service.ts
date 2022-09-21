@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { File } from '../db-manager/models/file.model';
+import { File } from '../common/models/file.model';
 import { NewObjectParamsDto } from '../common/dto/newObjectParams.dto';
 import { GetAllObjectsDataDto } from '../common/dto/getAllObjectsData.dto';
 import { GetOneObjectDataDto } from '../common/dto/getOneObjectsData.dto';

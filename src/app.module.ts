@@ -5,7 +5,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AwsSdkModule } from 'nest-aws-sdk';
 import { AppController } from './app.controller';
-import { File } from './db-manager/models/file.model';
+import { File } from './common/models/file.model';
 import { S3ManagerModule } from './s3-manager/s3-manager.module';
 import { SqsConsumerModule } from './sqs-consumer/sqs-consumer.module';
 import * as Joi from '@hapi/joi';

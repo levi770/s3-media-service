@@ -1,4 +1,5 @@
-import { Sequelize } from 'sequelize';
+import { Sequelize } from 'sequelize-typescript';
+import { File } from '../common/models/file.model';
 
 const sequelize = new Sequelize({
   dialect: 'postgres',
@@ -7,6 +8,7 @@ const sequelize = new Sequelize({
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DB,
   port: +process.env.POSTGRES_PORT,
+  models: [File],
   logging: false,
 });
 
