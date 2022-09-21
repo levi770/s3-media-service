@@ -21,9 +21,9 @@ export class S3ManagerService {
   async generatePutObjectUrl(params: NewObjectParamsDto) {
     if (params.resize === 'true') {
       const size = params.size.split(',');
-      const isSizeNubersOk = +size[0] > 0 && +size[1] > 0;
+      const isSizeNumbersOk = +size[0] > 0 && +size[1] > 0;
 
-      if (!isSizeNubersOk) {
+      if (!isSizeNumbersOk) {
         return {
           status: HttpStatus.BAD_REQUEST,
           message:
