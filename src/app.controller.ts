@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
-import { GetAllObjectsDataDto } from './common/dto/getAllObjectsData.dto';
-import { GetOneObjectDataDto } from './common/dto/getOneObjectsData.dto';
+import { GetAllObjectsParamsDto } from './common/dto/getAllObjectsParams.dto';
+import { GetOneObjectParamsDto } from './common/dto/getOneObjectParams.dto';
 import { NewObjectParamsDto } from './common/dto/newObjectParams.dto';
 import { DbManagerService } from './db-manager/db-manager.service';
 import { S3ManagerService } from './s3-manager/s3-manager.service';
@@ -25,14 +25,14 @@ export class AppController {
 
   @MessagePattern({ cmd: 'getAllObjectsData' })
   async getAllObjectsDataMessage(
-    params: GetAllObjectsDataDto,
+    params: GetAllObjectsParamsDto,
   ): Promise<AllObjectsDto | ResponceDto> {
     return await this.dbManagerService.getAllObjectsData(params);
   }
 
   @MessagePattern({ cmd: 'getOneObjectData' })
   async getObjectDataMessage(
-    params: GetOneObjectDataDto,
+    params: GetOneObjectParamsDto,
   ): Promise<File | ResponceDto> {
     return await this.dbManagerService.getOneObjectData(params);
   }

@@ -2,8 +2,8 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { File } from '../common/models/file.model';
 import { NewObjectParamsDto } from '../common/dto/newObjectParams.dto';
-import { GetAllObjectsDataDto } from '../common/dto/getAllObjectsData.dto';
-import { GetOneObjectDataDto } from '../common/dto/getOneObjectsData.dto';
+import { GetAllObjectsParamsDto } from '../common/dto/getAllObjectsParams.dto';
+import { GetOneObjectParamsDto } from '../common/dto/getOneObjectParams.dto';
 
 @Injectable()
 export class DbManagerService {
@@ -21,7 +21,7 @@ export class DbManagerService {
     return await this.fileRepository.findOne({ where: { key } });
   }
 
-  async getAllObjectsData(params?: GetAllObjectsDataDto) {
+  async getAllObjectsData(params?: GetAllObjectsParamsDto) {
     if (params.include_child === 'true') {
       return await this.fileRepository.findAndCountAll({
         attributes: { exclude: ['fileId', 'updatedAt'] },
@@ -51,7 +51,7 @@ export class DbManagerService {
     });
   }
 
-  async getOneObjectData(params: GetOneObjectDataDto) {
+  async getOneObjectData(params: GetOneObjectParamsDto) {
     let reqArgs = {};
 
     if (params.id) {

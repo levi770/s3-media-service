@@ -1,4 +1,4 @@
-export class GetAllObjectsDataDto {
+export class GetAllObjectsParamsDto {
   page?: string;
   limit?: string;
   order?: string;
