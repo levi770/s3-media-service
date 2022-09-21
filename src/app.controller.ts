@@ -7,11 +7,7 @@ import { DbManagerService } from './db-manager/db-manager.service';
 import { S3ManagerService } from './s3-manager/s3-manager.service';
 import { File } from './common/models/file.model';
 import { ResponceDto } from './common/dto/responce.dto';
-
-type allObjects = {
-  rows: File[];
-  count: number;
-};
+import { AllObjectsDto } from './common/dto/allObjects.dto';
 
 @Controller()
 export class AppController {
@@ -30,7 +26,7 @@ export class AppController {
   @MessagePattern({ cmd: 'getAllObjectsData' })
   async getAllObjectsDataMessage(
     params: GetAllObjectsDataDto,
-  ): Promise<allObjects | ResponceDto> {
+  ): Promise<AllObjectsDto | ResponceDto> {
     return await this.dbManagerService.getAllObjectsData(params);
   }
 
