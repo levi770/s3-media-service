@@ -1,8 +1,8 @@
 import { Job, DoneCallback } from 'bull';
-import * as fs from 'fs';
-import * as fsAsync from 'fs/promises';
 import { S3 } from 'aws-sdk';
 import { join } from 'path';
+import * as fs from 'fs';
+import * as fsAsync from 'fs/promises';
 import * as sharp from 'sharp';
 import { NewObjectParamsDto } from '../common/dto/newObjectParams.dto';
 import { File as fileRepo } from '../common/models/file.model';

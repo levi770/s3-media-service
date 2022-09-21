@@ -1,8 +1,8 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectAwsService } from 'nest-aws-sdk';
 import { S3 } from 'aws-sdk';
 import { NewObjectParamsDto } from '../common/dto/newObjectParams.dto';
-import { ConfigService } from '@nestjs/config';
 import { DbManagerService } from '../db-manager/db-manager.service';
 
 @Injectable()

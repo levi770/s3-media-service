@@ -1,3 +1,4 @@
+import * as Joi from '@hapi/joi';
 import { SqsConfig, SqsConfigOption, SqsModule } from '@nestjs-packages/sqs';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { BullModule } from '@nestjs/bull';
@@ -8,7 +9,6 @@ import { AppController } from './app.controller';
 import { File } from './common/models/file.model';
 import { S3ManagerModule } from './s3-manager/s3-manager.module';
 import { SqsConsumerModule } from './sqs-consumer/sqs-consumer.module';
-import * as Joi from '@hapi/joi';
 import { DbManagerModule } from './db-manager/db-manager.module';
 
 @Module({
