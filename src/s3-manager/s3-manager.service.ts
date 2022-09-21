@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectAwsService } from 'nest-aws-sdk';
 import { S3 } from 'aws-sdk';
 import { NewObjectParamsDto } from '../common/dto/newObjectParams.dto';
@@ -19,16 +19,35 @@ export class S3ManagerService {
   }
 
   async generatePutObjectUrl(params: NewObjectParamsDto) {
+    if (params.resize === 'true') {
+      const size = params.size.split(',');
+      const isSizeNubersOk = +size[0] > 0 && +size[1] > 0;
+
+      if (!isSizeNubersOk) {
+        return {
+          status: HttpStatus.BAD_REQUEST,
+          message:
+            'size must contain two comma separated numbers (width,height)',
+        };
+      }
+
+      params.size = JSON.stringify({ width: size[0], height: size[1] });
+    }
+
     const file = await this.dbManagerService.createFile(params);
     file.key = `${file.id}.original.${params.originalname}`;
     file.save();
 
-    return await this.s3.getSignedUrlPromise('putObject', {
+    const url = await this.s3.getSignedUrlPromise('putObject', {
       Bucket: await this.configService.get('S3_BUCKET_NAME'),
       ContentType: params.fileType,
-      //ACL: 'public-read',
       Key: file.key,
       Expires: 600,
     });
+
+    return {
+      status: HttpStatus.OK,
+      message: url,
+    };
   }
 }
