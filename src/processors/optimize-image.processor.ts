@@ -43,9 +43,16 @@ async function imageProcessor(job: Job, doneCallback: DoneCallback) {
     const filePath = join(process.cwd(), `/tmp/${objData.key}`);
     await fsAsync.writeFile(filePath, file);
 
-    const processedFile = await sharp(filePath)
-      .webp({ quality: +objParams.quality || 100 })
-      .toBuffer();
+    const processedFile = sharp(filePath).webp({
+      quality: +objParams.quality || 80,
+    });
+
+    if (objParams.resize === 'true') {
+      const size = JSON.parse(objParams.size);
+      processedFile.resize(+size.width, +size.height);
+    }
+
+    await processedFile.toBuffer();
 
     const processedFilePath = join(
       process.cwd(),
