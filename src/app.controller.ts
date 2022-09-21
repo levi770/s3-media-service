@@ -6,6 +6,7 @@ import { NewObjectParamsDto } from './common/dto/newObjectParams.dto';
 import { DbManagerService } from './db-manager/db-manager.service';
 import { S3ManagerService } from './s3-manager/s3-manager.service';
 import { File } from './common/models/file.model';
+import { ResponceDto } from './common/dto/responce.dto';
 
 type allObjects = {
   rows: File[];
@@ -20,19 +21,23 @@ export class AppController {
   ) {}
 
   @MessagePattern({ cmd: 'getPutObjectUrl' })
-  async getPutObjectUrlMessage(params: NewObjectParamsDto): Promise<string> {
+  async getPutObjectUrlMessage(
+    params: NewObjectParamsDto,
+  ): Promise<ResponceDto> {
     return await this.s3ManagerService.generatePutObjectUrl(params);
   }
 
-  @MessagePattern({ cmd: 'getAllObjectsDataByKey' })
-  async getAllObjectsDataByKeyMessage(
+  @MessagePattern({ cmd: 'getAllObjectsData' })
+  async getAllObjectsDataMessage(
     params: GetAllObjectsDataDto,
-  ): Promise<allObjects> {
+  ): Promise<allObjects | ResponceDto> {
     return await this.dbManagerService.getAllObjectsData(params);
   }
 
-  @MessagePattern({ cmd: 'getOneObjectDataByKey' })
-  async getObjectDataByKeyMessage(params: GetOneObjectDataDto): Promise<File> {
-    return await this.dbManagerService.getOneObjectDataByKey(params);
+  @MessagePattern({ cmd: 'getOneObjectData' })
+  async getObjectDataMessage(
+    params: GetOneObjectDataDto,
+  ): Promise<File | ResponceDto> {
+    return await this.dbManagerService.getOneObjectData(params);
   }
 }
