@@ -29,7 +29,7 @@ export class SqsConsumerService {
     obj.status = 'uploaded';
     obj.save();
 
-    if (obj.type === 'original' && objParams.optimize) {
+    if (obj.type === 'original' && objParams.optimize === 'true') {
       await this.fileQueue.add('optimize-image', obj);
     }
   }
