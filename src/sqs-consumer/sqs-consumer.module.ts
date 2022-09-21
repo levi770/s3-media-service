@@ -12,7 +12,10 @@ import { DbManagerModule } from '../db-manager/db-manager.module';
       processors: [
         {
           name: 'optimize-image',
-          path: join(__dirname, `../processors/optimize-image.processor.ts`),
+          path: join(
+            __dirname,
+            `../sqs-processors/optimize-image.processor.ts`,
+          ),
         },
       ],
     }),
