@@ -1,4 +1,4 @@
-export class ResponceDto {
+export class ResponseDto {
   status: number;
   message: string;
 }

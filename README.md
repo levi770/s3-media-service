@@ -8,7 +8,9 @@
 - Redis
 - Optional: Docker
 
-You need to create new Postgres database for microservice and setup Redis pub/sub host, or run `docker-compose up` to create a working environment from Docker containers
+You need to create new Postgres database for microservice and setup Redis pub/sub host, or run `docker-compose up` to create a working environment from Docker containers.
+
+Before you can add a file to bucket, you must create an SQS queue and configure S3 ObjectCreated notifications in the AWS Management Console when using the Amazon AWS S3 REST API protocol described in [this article](https://www.juniper.net/documentation/us/en/software/jsa7.4.2/jsa-dsm/topics/concept/jsa-dsm-create-sqs-queue-and-configure-s3-objectcreated-notifications.html#create-an-sqs-queue-and-configure-s-objectcreated-notifications__CreatingTheSQSQueueThatIsUsedToRece-87B75AE6).
 
 ## Installation
 
@@ -69,13 +71,13 @@ $ npm run start:prod
 
 ## Description
 
-The service allows you to upload any files to the s3 cloud storage. when uploading images, you can specify optimization parameters in the upload request, then after uploading the original file, an additional optimized file will be created, so both original and optimized files will be stored in the cloud storage. archives or 3D objects will be unloaded but will not be optimized.
+The service allows you to upload any files to the s3 cloud storage. When uploading images, you can specify optimization parameters in the upload request, then after uploading the original file, an additional optimized file will be created, so both original and optimized files will be stored in the cloud storage. Archives or 3D objects will be uploaded, but will not be optimized.
 
 The system consists of five main modules:
 
 - The root module responsible for receiving messages and routing requests;
 - S3 module that generates links for uploading files on the client side;
-- SQS module is responsible for receiving download status notifications from the s3 repository;
+- SQS module is responsible for receiving upload status notifications from the s3 repository;
 - A database module that creates records for each uploaded file and allows you to track the status;
 - A file processing module that runs in a separate worker thread and that provides files conversion and resizing.
 
@@ -115,7 +117,7 @@ The system consists of five main modules:
 }
 ```
 
-Responce:
+Response:
 
 ```
 {
@@ -148,7 +150,7 @@ Responce:
 }
 ```
 
-Responce:
+Response:
 
 ```
 {
@@ -175,7 +177,7 @@ Responce:
 }
 ```
 
-Responce:
+Response:
 
 ```
 {

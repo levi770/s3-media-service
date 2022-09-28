@@ -6,7 +6,7 @@ import { NewObjectParamsDto } from './common/dto/newObjectParams.dto';
 import { DbManagerService } from './db-manager/db-manager.service';
 import { S3ManagerService } from './s3-manager/s3-manager.service';
 import { File } from './common/models/file.model';
-import { ResponceDto } from './common/dto/responce.dto';
+import { ResponseDto } from './common/dto/response.dto';
 import { AllObjectsDto } from './common/dto/allObjects.dto';
 
 @Controller()
@@ -19,21 +19,21 @@ export class AppController {
   @MessagePattern({ cmd: 'getPutObjectUrl' })
   async getPutObjectUrlMessage(
     params: NewObjectParamsDto,
-  ): Promise<ResponceDto> {
+  ): Promise<ResponseDto> {
     return await this.s3ManagerService.generatePutObjectUrl(params);
   }
 
   @MessagePattern({ cmd: 'getAllObjectsData' })
   async getAllObjectsDataMessage(
     params: GetAllObjectsParamsDto,
-  ): Promise<AllObjectsDto | ResponceDto> {
+  ): Promise<AllObjectsDto | ResponseDto> {
     return await this.dbManagerService.getAllObjectsData(params);
   }
 
   @MessagePattern({ cmd: 'getOneObjectData' })
   async getObjectDataMessage(
     params: GetOneObjectParamsDto,
-  ): Promise<File | ResponceDto> {
+  ): Promise<File | ResponseDto> {
     return await this.dbManagerService.getOneObjectData(params);
   }
 }
