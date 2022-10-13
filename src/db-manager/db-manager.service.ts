@@ -22,7 +22,7 @@ export class DbManagerService {
   }
 
   async getAllObjectsData(params?: GetAllObjectsParamsDto) {
-    if (params.include_child === 'true') {
+    if (params.include_child) {
       return await this.fileRepository.findAndCountAll({
         attributes: { exclude: ['fileId', 'updatedAt'] },
         include: [
@@ -69,7 +69,7 @@ export class DbManagerService {
       };
     }
 
-    if (params.include_child === 'true') {
+    if (params.include_child) {
       return await this.fileRepository.findOne({
         where: reqArgs,
         attributes: { exclude: ['fileId', 'updatedAt'] },

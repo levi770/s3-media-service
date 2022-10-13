@@ -47,7 +47,7 @@ async function imageProcessor(job: Job, doneCallback: DoneCallback) {
       quality: +objParams.quality || 80,
     });
 
-    if (objParams.resize === 'true') {
+    if (objParams.resize) {
       const size = JSON.parse(objParams.size);
       processedFile.resize(+size.width, +size.height);
     }
