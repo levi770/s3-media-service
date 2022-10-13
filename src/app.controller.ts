@@ -16,11 +16,11 @@ export class AppController {
     private readonly dbManagerService: DbManagerService,
   ) {}
 
-  @MessagePattern({ cmd: 'getPutObjectUrl' })
-  async getPutObjectUrlMessage(
+  @MessagePattern({ cmd: 'getNewObjectUrl' })
+  async getNewObjectUrlMessage(
     params: NewObjectParamsDto,
   ): Promise<ResponseDto> {
-    return await this.s3ManagerService.generatePutObjectUrl(params);
+    return await this.s3ManagerService.generateNewObjectUrl(params);
   }
 
   @MessagePattern({ cmd: 'getAllObjectsData' })

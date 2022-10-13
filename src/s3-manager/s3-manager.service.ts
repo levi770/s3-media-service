@@ -18,8 +18,8 @@ export class S3ManagerService {
     return response.Contents.map((c) => c.Key);
   }
 
-  async generatePutObjectUrl(params: NewObjectParamsDto) {
-    if (params.resize === 'true') {
+  async generateNewObjectUrl(params: NewObjectParamsDto) {
+    if (params.resize) {
       const size = params.size.split(',');
       const isSizeNumbersOk = +size[0] > 0 && +size[1] > 0;
 
