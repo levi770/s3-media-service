@@ -10,7 +10,7 @@ export declare class AppController {
     private readonly s3ManagerService;
     private readonly dbManagerService;
     constructor(s3ManagerService: S3ManagerService, dbManagerService: DbManagerService);
-    getPutObjectUrlMessage(params: NewObjectParamsDto): Promise<ResponseDto>;
+    getNewObjectUrlMessage(params: NewObjectParamsDto): Promise<ResponseDto>;
     getAllObjectsDataMessage(params: GetAllObjectsParamsDto): Promise<AllObjectsDto | ResponseDto>;
     getObjectDataMessage(params: GetOneObjectParamsDto): Promise<File | ResponseDto>;
 }

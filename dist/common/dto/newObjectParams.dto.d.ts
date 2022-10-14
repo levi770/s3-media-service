@@ -1,7 +1,7 @@
 export declare class NewObjectParamsDto {
     fileType: string;
     originalname: string;
-    optimize?: string;
+    optimize?: boolean;
     resize?: string;
     size?: string;
     quality?: string;

@@ -37,13 +37,11 @@ async function imageProcessor(job, doneCallback) {
         const processedFile = sharp(filePath).webp({
             quality: +objParams.quality || 80,
         });
-        if (objParams.resize === 'true') {
+        if (objParams.resize) {
             const size = JSON.parse(objParams.size);
             processedFile.resize(+size.width, +size.height);
         }
         await processedFile.toBuffer();
-        const processedFilePath = (0, path_1.join)(process.cwd(), `/tmp/converted-${objData.id}.${fileName}.webp`);
-        await fsAsync.writeFile(processedFilePath, processedFile);
         const newObject = await file_model_1.File.create({
             status: 'initial',
             type: 'optimized',
@@ -64,7 +62,6 @@ async function imageProcessor(job, doneCallback) {
                 newObject.status = 'uploaded';
                 await newObject.save();
                 await fsAsync.unlink(filePath);
-                await fsAsync.unlink(processedFilePath);
                 doneCallback(null, data);
             }
         });

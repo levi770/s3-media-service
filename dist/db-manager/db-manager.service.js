@@ -30,7 +30,7 @@ let DbManagerService = class DbManagerService {
         return await this.fileRepository.findOne({ where: { key } });
     }
     async getAllObjectsData(params) {
-        if (params.include_child === 'true') {
+        if (params.include_child) {
             return await this.fileRepository.findAndCountAll({
                 attributes: { exclude: ['fileId', 'updatedAt'] },
                 include: [
@@ -73,7 +73,7 @@ let DbManagerService = class DbManagerService {
                 message: 'key or id is required',
             };
         }
-        if (params.include_child === 'true') {
+        if (params.include_child) {
             return await this.fileRepository.findOne({
                 where: reqArgs,
                 attributes: { exclude: ['fileId', 'updatedAt'] },

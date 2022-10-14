@@ -30,7 +30,7 @@ let SqsConsumerService = class SqsConsumerService {
         const objParams = obj.params;
         obj.status = 'uploaded';
         obj.save();
-        if (obj.type === 'original' && objParams.optimize === 'true') {
+        if (obj.type === 'original' && objParams.optimize) {
             await this.fileQueue.add('optimize-image', obj);
         }
     }

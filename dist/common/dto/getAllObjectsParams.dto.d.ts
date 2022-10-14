@@ -1,7 +1,7 @@
 export declare class GetAllObjectsParamsDto {
-    page?: string;
-    limit?: string;
+    page?: number;
+    limit?: number;
     order?: string;
     order_by?: string;
-    include_child?: string;
+    include_child?: boolean;
 }

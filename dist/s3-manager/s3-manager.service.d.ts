@@ -9,7 +9,7 @@ export declare class S3ManagerService {
     private readonly configService;
     constructor(s3: S3, dbManagerService: DbManagerService, configService: ConfigService);
     listBucketContents(bucket: string): Promise<string[]>;
-    generatePutObjectUrl(params: NewObjectParamsDto): Promise<{
+    generateNewObjectUrl(params: NewObjectParamsDto): Promise<{
         status: HttpStatus;
         message: string;
     }>;

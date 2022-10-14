@@ -28,8 +28,8 @@ let S3ManagerService = class S3ManagerService {
         const response = await this.s3.listObjectsV2({ Bucket: bucket }).promise();
         return response.Contents.map((c) => c.Key);
     }
-    async generatePutObjectUrl(params) {
-        if (params.resize === 'true') {
+    async generateNewObjectUrl(params) {
+        if (params.resize) {
             const size = params.size.split(',');
             const isSizeNumbersOk = +size[0] > 0 && +size[1] > 0;
             if (!isSizeNumbersOk) {

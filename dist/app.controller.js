@@ -22,8 +22,8 @@ let AppController = class AppController {
         this.s3ManagerService = s3ManagerService;
         this.dbManagerService = dbManagerService;
     }
-    async getPutObjectUrlMessage(params) {
-        return await this.s3ManagerService.generatePutObjectUrl(params);
+    async getNewObjectUrlMessage(params) {
+        return await this.s3ManagerService.generateNewObjectUrl(params);
     }
     async getAllObjectsDataMessage(params) {
         return await this.dbManagerService.getAllObjectsData(params);
@@ -33,11 +33,11 @@ let AppController = class AppController {
     }
 };
 __decorate([
-    (0, microservices_1.MessagePattern)({ cmd: 'getPutObjectUrl' }),
+    (0, microservices_1.MessagePattern)({ cmd: 'getNewObjectUrl' }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [newObjectParams_dto_1.NewObjectParamsDto]),
     __metadata("design:returntype", Promise)
-], AppController.prototype, "getPutObjectUrlMessage", null);
+], AppController.prototype, "getNewObjectUrlMessage", null);
 __decorate([
     (0, microservices_1.MessagePattern)({ cmd: 'getAllObjectsData' }),
     __metadata("design:type", Function),
