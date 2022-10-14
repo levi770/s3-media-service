@@ -54,12 +54,12 @@ async function imageProcessor(job: Job, doneCallback: DoneCallback) {
 
     await processedFile.toBuffer();
 
-    const processedFilePath = join(
-      process.cwd(),
-      `/tmp/converted-${objData.id}.${fileName}.webp`,
-    );
+    // const processedFilePath = join(
+    //   process.cwd(),
+    //   `/tmp/converted-${objData.id}.${fileName}.webp`,
+    // );
 
-    await fsAsync.writeFile(processedFilePath, processedFile);
+    // await fsAsync.writeFile(processedFilePath, processedFile);
 
     const newObject = await fileRepo.create({
       status: 'initial',
@@ -87,7 +87,7 @@ async function imageProcessor(job: Job, doneCallback: DoneCallback) {
         await newObject.save();
 
         await fsAsync.unlink(filePath);
-        await fsAsync.unlink(processedFilePath);
+        //await fsAsync.unlink(processedFilePath);
 
         doneCallback(null, data);
       }
