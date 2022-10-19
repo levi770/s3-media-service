@@ -23,77 +23,109 @@ export class DbManagerService {
   }
 
   async getAllObjectsData(params?: GetAllObjectsParamsDto) {
-    const args = {
-      attributes: { exclude: ['fileId', 'updatedAt'] },
-      offset:
-        !params || !params.limit || !params.page
-          ? null
-          : 0 + (+params.page - 1) * +params.limit,
-      limit: !params || !params.limit ? null : +params.limit,
-      order: [
-        [params.order_by || 'createdAt', params.order || 'DESC'],
-      ] as Order,
-      include: null,
-    };
+    try {
+      const args = {
+        attributes: { exclude: ['fileId', 'updatedAt'] },
+        offset:
+          !params || !params.limit || !params.page
+            ? null
+            : 0 + (+params.page - 1) * +params.limit,
+        limit: !params || !params.limit ? null : +params.limit,
+        order: [
+          [params.order_by || 'createdAt', params.order || 'DESC'],
+        ] as Order,
+        include: null,
+      };
 
-    if (params.include_child) {
-      args.include = [
-        {
-          model: File,
-          attributes: { exclude: ['fileId', 'params', 'updatedAt'] },
-        },
-      ];
+      if (params.include_child) {
+        args.include = [
+          {
+            model: File,
+            attributes: { exclude: ['fileId', 'params', 'updatedAt'] },
+          },
+        ];
+      }
+
+      const result = await this.fileRepository.findAndCountAll(args);
+
+      return {
+        status: HttpStatus.OK,
+        message: null,
+        result,
+      };
+    } catch (error) {
+      if (error.name === 'SequelizeDatabaseError') {
+        return {
+          status: error.original.code,
+          message: error.original.message,
+          result: null,
+        };
+      }
+
+      return {
+        status: error.status,
+        message: error.message,
+        result: null,
+      };
     }
-
-    const result = await this.fileRepository.findAndCountAll(args);
-
-    return {
-      status: HttpStatus.OK,
-      message: null,
-      result,
-    };
   }
 
   async getOneObjectData(params: GetOneObjectParamsDto) {
-    if (!params) {
+    try {
+      if (!params) {
+        return {
+          status: HttpStatus.BAD_REQUEST,
+          message: 'params can not be empty',
+          result: null,
+        };
+      }
+
+      if (!params.id && !params.key) {
+        return {
+          status: HttpStatus.BAD_REQUEST,
+          message: 'key or id is required',
+          result: null,
+        };
+      }
+
+      const where = params.id ? { id: params.id } : { key: params.key };
+
+      const args = {
+        attributes: { exclude: ['fileId', 'updatedAt'] },
+        include: null,
+        where,
+      };
+
+      if (params.include_child) {
+        args.include = [
+          {
+            model: File,
+            attributes: { exclude: ['fileId', 'params', 'updatedAt'] },
+          },
+        ];
+      }
+
+      const result = await this.fileRepository.findOne(args);
+
       return {
-        status: HttpStatus.BAD_REQUEST,
-        message: 'params can not be empty',
+        status: HttpStatus.OK,
+        message: null,
+        result,
+      };
+    } catch (error) {
+      if (error.name === 'SequelizeDatabaseError') {
+        return {
+          status: error.original.code,
+          message: error.original.message,
+          result: null,
+        };
+      }
+
+      return {
+        status: error.status,
+        message: error.message,
         result: null,
       };
     }
-
-    if (!params.id && !params.key) {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        message: 'key or id is required',
-        result: null,
-      };
-    }
-
-    const where = params.id ? { id: params.id } : { key: params.key };
-
-    const args = {
-      attributes: { exclude: ['fileId', 'updatedAt'] },
-      include: null,
-      where,
-    };
-
-    if (params.include_child) {
-      args.include = [
-        {
-          model: File,
-          attributes: { exclude: ['fileId', 'params', 'updatedAt'] },
-        },
-      ];
-    }
-
-    const result = await this.fileRepository.findOne(args);
-
-    return {
-      status: HttpStatus.OK,
-      message: null,
-      result,
-    };
   }
 }
