@@ -36,6 +36,8 @@
     "@types/imagemin": "^8.0.0",
     "adm-zip": "^0.5.9",
     "aws-sdk": "^2.1216.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.13.2",
     "fs": "^0.0.1-security",
     "imagemin": "^8.0.1",
     "imagemin-pngquant": "^9.0.2",
