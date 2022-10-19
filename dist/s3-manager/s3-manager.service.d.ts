@@ -12,5 +12,12 @@ export declare class S3ManagerService {
     generateNewObjectUrl(params: NewObjectParamsDto): Promise<{
         status: HttpStatus;
         message: string;
+        result: any;
+    } | {
+        status: HttpStatus;
+        message: any;
+        result: {
+            url: string;
+        };
     }>;
 }

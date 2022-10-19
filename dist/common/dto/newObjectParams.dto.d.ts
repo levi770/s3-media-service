@@ -2,7 +2,7 @@ export declare class NewObjectParamsDto {
     fileType: string;
     originalname: string;
     optimize?: boolean;
-    resize?: string;
+    resize?: boolean;
     size?: string;
-    quality?: string;
+    quality?: number;
 }

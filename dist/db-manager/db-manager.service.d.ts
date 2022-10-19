@@ -10,11 +10,24 @@ export declare class DbManagerService {
     findByPk(pk: string): Promise<File>;
     findByKey(key: string): Promise<File>;
     getAllObjectsData(params?: GetAllObjectsParamsDto): Promise<{
-        rows: File[];
-        count: number;
-    }>;
-    getOneObjectData(params: GetOneObjectParamsDto): Promise<File | {
         status: HttpStatus;
-        message: string;
+        message: any;
+        result: {
+            rows: File[];
+            count: number;
+        };
+    } | {
+        status: any;
+        message: any;
+        result: any;
+    }>;
+    getOneObjectData(params: GetOneObjectParamsDto): Promise<{
+        status: HttpStatus;
+        message: any;
+        result: File;
+    } | {
+        status: any;
+        message: any;
+        result: any;
     }>;
 }

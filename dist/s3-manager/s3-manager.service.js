@@ -36,6 +36,7 @@ let S3ManagerService = class S3ManagerService {
                 return {
                     status: common_1.HttpStatus.BAD_REQUEST,
                     message: 'size must contain two comma separated numbers (width,height)',
+                    result: null,
                 };
             }
             params.size = JSON.stringify({ width: size[0], height: size[1] });
@@ -51,7 +52,8 @@ let S3ManagerService = class S3ManagerService {
         });
         return {
             status: common_1.HttpStatus.OK,
-            message: url,
+            message: null,
+            result: { url },
         };
     }
 };

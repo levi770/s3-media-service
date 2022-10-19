@@ -30,65 +30,99 @@ let DbManagerService = class DbManagerService {
         return await this.fileRepository.findOne({ where: { key } });
     }
     async getAllObjectsData(params) {
-        if (params.include_child) {
-            return await this.fileRepository.findAndCountAll({
+        try {
+            const args = {
                 attributes: { exclude: ['fileId', 'updatedAt'] },
-                include: [
-                    {
-                        model: file_model_1.File,
-                        attributes: { exclude: ['fileId', 'params', 'updatedAt'] },
-                    },
-                ],
                 offset: !params || !params.limit || !params.page
                     ? null
                     : 0 + (+params.page - 1) * +params.limit,
                 limit: !params || !params.limit ? null : +params.limit,
-                order: [[params.order_by || 'createdAt', params.order || 'DESC']],
-            });
-        }
-        return await this.fileRepository.findAndCountAll({
-            attributes: { exclude: ['fileId', 'updatedAt'] },
-            offset: !params || !params.limit || !params.page
-                ? null
-                : 0 + (+params.page - 1) * +params.limit,
-            limit: !params || !params.limit ? null : +params.limit,
-            order: [[params.order_by || 'createdAt', params.order || 'DESC']],
-        });
-    }
-    async getOneObjectData(params) {
-        let reqArgs = {};
-        if (params.id) {
-            reqArgs = {
-                id: params.id,
+                order: [
+                    [params.order_by || 'createdAt', params.order || 'DESC'],
+                ],
+                include: null,
             };
-        }
-        else if (params.key) {
-            reqArgs = {
-                key: params.key,
-            };
-        }
-        else {
-            return {
-                status: common_1.HttpStatus.BAD_REQUEST,
-                message: 'key or id is required',
-            };
-        }
-        if (params.include_child) {
-            return await this.fileRepository.findOne({
-                where: reqArgs,
-                attributes: { exclude: ['fileId', 'updatedAt'] },
-                include: [
+            if (params.include_child) {
+                args.include = [
                     {
                         model: file_model_1.File,
                         attributes: { exclude: ['fileId', 'params', 'updatedAt'] },
                     },
-                ],
-            });
+                ];
+            }
+            const result = await this.fileRepository.findAndCountAll(args);
+            return {
+                status: common_1.HttpStatus.OK,
+                message: null,
+                result,
+            };
         }
-        return await this.fileRepository.findOne({
-            where: reqArgs,
-            attributes: { exclude: ['fileId', 'updatedAt'] },
-        });
+        catch (error) {
+            if (error.name === 'SequelizeDatabaseError') {
+                return {
+                    status: error.original.code,
+                    message: error.original.message,
+                    result: null,
+                };
+            }
+            return {
+                status: error.status,
+                message: error.message,
+                result: null,
+            };
+        }
+    }
+    async getOneObjectData(params) {
+        try {
+            if (!params) {
+                return {
+                    status: common_1.HttpStatus.BAD_REQUEST,
+                    message: 'params can not be empty',
+                    result: null,
+                };
+            }
+            if (!params.id && !params.key) {
+                return {
+                    status: common_1.HttpStatus.BAD_REQUEST,
+                    message: 'key or id is required',
+                    result: null,
+                };
+            }
+            const where = params.id ? { id: params.id } : { key: params.key };
+            const args = {
+                attributes: { exclude: ['fileId', 'updatedAt'] },
+                include: null,
+                where,
+            };
+            if (params.include_child) {
+                args.include = [
+                    {
+                        model: file_model_1.File,
+                        attributes: { exclude: ['fileId', 'params', 'updatedAt'] },
+                    },
+                ];
+            }
+            const result = await this.fileRepository.findOne(args);
+            return {
+                status: common_1.HttpStatus.OK,
+                message: null,
+                result,
+            };
+        }
+        catch (error) {
+            if (error.name === 'SequelizeDatabaseError') {
+                return {
+                    status: error.original.code,
+                    message: error.original.message,
+                    result: null,
+                };
+            }
+            return {
+                status: error.status,
+                message: error.message,
+                result: null,
+            };
+        }
     }
 };
 DbManagerService = __decorate([
