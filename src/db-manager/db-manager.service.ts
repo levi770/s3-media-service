@@ -4,6 +4,7 @@ import { File } from '../common/models/file.model';
 import { NewObjectParamsDto } from '../common/dto/newObjectParams.dto';
 import { GetAllObjectsParamsDto } from '../common/dto/getAllObjectsParams.dto';
 import { GetOneObjectParamsDto } from '../common/dto/getOneObjectParams.dto';
+import { Order } from 'sequelize';
 
 @Injectable()
 export class DbManagerService {
@@ -22,69 +23,77 @@ export class DbManagerService {
   }
 
   async getAllObjectsData(params?: GetAllObjectsParamsDto) {
-    if (params.include_child) {
-      return await this.fileRepository.findAndCountAll({
-        attributes: { exclude: ['fileId', 'updatedAt'] },
-        include: [
-          {
-            model: File,
-            attributes: { exclude: ['fileId', 'params', 'updatedAt'] },
-          },
-        ],
-        offset:
-          !params || !params.limit || !params.page
-            ? null
-            : 0 + (+params.page - 1) * +params.limit,
-        limit: !params || !params.limit ? null : +params.limit,
-        order: [[params.order_by || 'createdAt', params.order || 'DESC']],
-      });
-    }
-
-    return await this.fileRepository.findAndCountAll({
+    const args = {
       attributes: { exclude: ['fileId', 'updatedAt'] },
       offset:
         !params || !params.limit || !params.page
           ? null
           : 0 + (+params.page - 1) * +params.limit,
       limit: !params || !params.limit ? null : +params.limit,
-      order: [[params.order_by || 'createdAt', params.order || 'DESC']],
-    });
+      order: [
+        [params.order_by || 'createdAt', params.order || 'DESC'],
+      ] as Order,
+      include: null,
+    };
+
+    if (params.include_child) {
+      args.include = [
+        {
+          model: File,
+          attributes: { exclude: ['fileId', 'params', 'updatedAt'] },
+        },
+      ];
+    }
+
+    const result = await this.fileRepository.findAndCountAll(args);
+
+    return {
+      status: HttpStatus.OK,
+      message: null,
+      result,
+    };
   }
 
   async getOneObjectData(params: GetOneObjectParamsDto) {
-    let reqArgs = {};
+    if (!params) {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        message: 'params can not be empty',
+        result: null,
+      };
+    }
 
-    if (params.id) {
-      reqArgs = {
-        id: params.id,
-      };
-    } else if (params.key) {
-      reqArgs = {
-        key: params.key,
-      };
-    } else {
+    if (!params.id && !params.key) {
       return {
         status: HttpStatus.BAD_REQUEST,
         message: 'key or id is required',
+        result: null,
       };
     }
 
+    const where = params.id ? { id: params.id } : { key: params.key };
+
+    const args = {
+      attributes: { exclude: ['fileId', 'updatedAt'] },
+      include: null,
+      where,
+    };
+
     if (params.include_child) {
-      return await this.fileRepository.findOne({
-        where: reqArgs,
-        attributes: { exclude: ['fileId', 'updatedAt'] },
-        include: [
-          {
-            model: File,
-            attributes: { exclude: ['fileId', 'params', 'updatedAt'] },
-          },
-        ],
-      });
+      args.include = [
+        {
+          model: File,
+          attributes: { exclude: ['fileId', 'params', 'updatedAt'] },
+        },
+      ];
     }
 
-    return await this.fileRepository.findOne({
-      where: reqArgs,
-      attributes: { exclude: ['fileId', 'updatedAt'] },
-    });
+    const result = await this.fileRepository.findOne(args);
+
+    return {
+      status: HttpStatus.OK,
+      message: null,
+      result,
+    };
   }
 }

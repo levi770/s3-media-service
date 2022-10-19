@@ -28,6 +28,7 @@ export class S3ManagerService {
           status: HttpStatus.BAD_REQUEST,
           message:
             'size must contain two comma separated numbers (width,height)',
+          result: null,
         };
       }
 
@@ -47,7 +48,8 @@ export class S3ManagerService {
 
     return {
       status: HttpStatus.OK,
-      message: url,
+      message: null,
+      result: { url },
     };
   }
 }
