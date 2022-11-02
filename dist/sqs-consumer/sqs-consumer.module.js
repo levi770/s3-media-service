@@ -28,7 +28,7 @@ SqsConsumerModule = __decorate([
                 ],
             }),
             sqs_1.SqsModule.registerQueue({
-                name: 'levi770devQueue',
+                name: process.env.SQS_QUEUE_NAME,
                 type: sqs_1.SqsQueueType.Consumer,
                 consumerOptions: {
                     shouldDeleteMessages: true,

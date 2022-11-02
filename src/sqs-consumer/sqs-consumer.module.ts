@@ -20,7 +20,7 @@ import { DbManagerModule } from '../db-manager/db-manager.module';
       ],
     }),
     SqsModule.registerQueue({
-      name: 'levi770devQueue',
+      name: process.env.SQS_QUEUE_NAME,
       type: SqsQueueType.Consumer,
       consumerOptions: {
         shouldDeleteMessages: true,
