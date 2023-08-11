@@ -14,7 +14,7 @@ import { DbManagerModule } from '../db-manager/db-manager.module';
           name: 'optimize-image',
           path: join(
             __dirname,
-            `../sqs-processors/optimize-image.processor.js`,
+            `../sqs-processors/optimize-image.processor.ts`,
           ),
         },
       ],
